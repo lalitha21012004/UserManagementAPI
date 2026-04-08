@@ -1,0 +1,35 @@
+### Get all users
+GET http://localhost:3000/users
+
+### Get a single user by ID (Practice Task 1)
+GET http://localhost:3000/users/1
+
+### Search users by name (Assignment 1)
+GET http://localhost:3000/users/search?name=Rahul
+
+### Get all adults (Assignment 2)
+GET http://localhost:3000/users/adults
+
+### Get all emails (Assignment 3)
+GET http://localhost:3000/users/emails
+
+### Add a new user (POST)
+POST http://localhost:3000/users
+Content-Type: application/json
+
+{
+    "name": "Aman",
+    "email": "aman@example.com",
+    "age": 19
+}
+
+### Update a user (PUT)
+PUT http://localhost:3000/users/1
+Content-Type: application/json
+
+{
+    "name": "Rahul Kumar"
+}
+
+### Delete a user (DELETE)
+DELETE http://localhost:3000/users/2
