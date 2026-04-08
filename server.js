@@ -86,3 +86,60 @@ app.get("/users/emails", (_req, res) => {
     // Return the array of emails
     res.json(userEmails);
 });
+
+const mongoose = require('mongoose');
+mongoose.connect("mongodb://127.0.0.1:27017/testdb")
+.then(() => console.log("MongoDB Connected"))
+.catch(err => console.log(err));
+ 
+const userSchema = new mongoose.Schema({
+    name: String,
+    email: String,
+    age: Number,
+    isActive: { type: Boolean, default: true } // Added isActive field
+});
+const User = mongoose.model('User', userSchema);
+
+const newUser = new User({ name: "Rahul", email: "rahul@example.com", age: 22 });
+newUser.save().then(() => console.log("User saved"));
+
+User.find().then(users => console.log(users));
+
+User.updateOne({name: "Rahul"}, {age: 23})
+.then(() => console.log("User updated"));
+
+User.deleteOne({name: "Rahul"})
+.then(() => console.log("User deleted"));
+
+
+const productSchema = new mongoose.Schema({
+    name: String,
+    price: Number,
+    category: String
+});
+const Product = mongoose.model('Product', productSchema);
+
+app.get('/users/age/:min', async (req, res) => {
+    try {
+        const minAge = parseInt(req.params.min);
+        const users = await User.find({ age: { $gt: minAge } });
+        res.json(users);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.post('/products', async (req, res) => {
+    try {
+        const newProduct = new Product(req.body);
+        await newProduct.save();
+        res.status(201).json(newProduct);
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+});
+
+app.get('/products', async (_req, res) => {
+    const products = await Product.find();
+    res.json(products);
+});
